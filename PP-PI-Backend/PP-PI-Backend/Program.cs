@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using PP_PI_Backend;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var allowedOrigins = builder.Configuration.GetValue<string>("AllowedOrigins")!.Split(",");
@@ -15,6 +18,9 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+options.UseSqlServer("name=DefaultConnection"));
 
 var app = builder.Build();
 
