@@ -1,15 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PP_PI_Backend.Entities;
+using PP_PI_Backend.Data;
+using PP_PI_Backend.Models;
+
 
 namespace PP_PI_Backend.Controllers
 {
     [Route("api/reviews")]
     public class ReviewsController : ControllerBase
     {
-        private readonly ApplicationDbContext context;
+        private readonly LibraryDb context;
 
-        public ReviewsController(ApplicationDbContext context)
+        public ReviewsController(LibraryDb context)
         {
             this.context = context;
         }

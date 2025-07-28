@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PP_PI_Backend.Entities
+namespace PP_PI_Backend.Models
 {
     public class Review
     {

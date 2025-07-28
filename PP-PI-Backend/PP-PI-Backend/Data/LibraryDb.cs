@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using PP_PI_Backend.Models;
 
 namespace PP_PI_Backend.Data
@@ -9,6 +10,9 @@ namespace PP_PI_Backend.Data
         public LibraryDb(DbContextOptions<LibraryDb> options) : base(options) 
         { }
         public DbSet<Book> Books => Set<Book>(); // setting the Book entity as a property of the db Library
-        public DbSet<Author> Authors => Set<Author>(); // setting the Author entity as a property of the db Library (a table in the DB)
+        public DbSet<Author> Authors => Set<Author>();
+        // setting the Author entity as a property of the db Library (a table in the DB)
+        public DbSet<Review> Reviews => Set<Review>();
+        // Setting the Review entity as a property of the db Library (a table in the DB )
     }
 }

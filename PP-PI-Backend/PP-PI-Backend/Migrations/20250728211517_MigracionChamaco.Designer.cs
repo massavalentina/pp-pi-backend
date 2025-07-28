@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using PP_PI_Backend;
+using PP_PI_Backend.Data;
 
 #nullable disable
 
 namespace PP_PI_Backend.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250727011629_InitialCreate")]
-    partial class InitialCreate
+    [DbContext(typeof(LibraryDb))]
+    [Migration("20250728211517_MigracionChamaco")]
+    partial class MigracionChamaco
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,28 @@ namespace PP_PI_Backend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PP_PI_Backend.Entities.Book", b =>
+            modelBuilder.Entity("PP_PI_Backend.Models.Author", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Authors");
+                });
+
+            modelBuilder.Entity("PP_PI_Backend.Models.Book", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -41,7 +62,7 @@ namespace PP_PI_Backend.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("PP_PI_Backend.Entities.Review", b =>
+            modelBuilder.Entity("PP_PI_Backend.Models.Review", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
