@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using PP_PI_Backend.Entities;
 using PP_PI_Backend.Models;
 
 namespace PP_PI_Backend.Data
@@ -14,5 +14,7 @@ namespace PP_PI_Backend.Data
         // setting the Author entity as a property of the db Library (a table in the DB)
         public DbSet<Review> Reviews => Set<Review>();
         // Setting the Review entity as a property of the db Library (a table in the DB )
+
+        public DbSet<Publisher> Publishers => Set<Publisher>();
     }
 }
