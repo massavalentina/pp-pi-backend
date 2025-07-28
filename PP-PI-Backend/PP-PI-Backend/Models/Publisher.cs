@@ -8,6 +8,7 @@
         public string WebsiteUrl { get; set; }
         public DateTime? FoundedAt { get; set; }
         public bool IsActive { get; set; } = true;
+        public DateTime? CreatedAt { get; set; }
 
     }
 }

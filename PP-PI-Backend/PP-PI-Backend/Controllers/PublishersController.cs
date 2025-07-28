@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PP_PI_Backend.Data;
 using PP_PI_Backend.Entities;
 
 namespace PP_PI_Backend.Controllers
@@ -7,8 +8,8 @@ namespace PP_PI_Backend.Controllers
     [Route("api/publishers")]
     public class PublishersController : ControllerBase
     {
-        private readonly ApplicationDbContext context;
-        public PublishersController(ApplicationDbContext context) 
+        private readonly LibraryDb context;
+        public PublishersController(LibraryDb context) 
         { 
             this.context = context;
         }
