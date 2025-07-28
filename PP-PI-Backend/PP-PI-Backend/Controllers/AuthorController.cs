@@ -31,7 +31,7 @@ namespace PP_PI_Backend.Controllers
         }
 
         [HttpPost] // Insert a new author
-        public async Task<CreatedAtRouteResult> Post(Author author)
+        public async Task<CreatedAtRouteResult> Post([FromBody] Author author)
         {
             context.Add(author); // Stashes the insertion of the new register (memory operation)
             await context.SaveChangesAsync(); // Persists the insertion in the db table
@@ -40,7 +40,7 @@ namespace PP_PI_Backend.Controllers
         }
 
         [HttpPut("{id:int}")] // Modify an author
-        public async Task<ActionResult> Put(int id,  Author author)
+        public async Task<ActionResult> Put(int id, [FromBody] Author author)
         {
             var authorExists = await context.Authors.AnyAsync(x => x.Id == id); // Generates a flag for the author search
             if (!authorExists) { return NotFound(); } // If there's no match, then returns a NotFound 
