@@ -1,5 +1,6 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PP_PI_Backend;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +20,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+
+
+var connectionString = builder.Configuration.GetConnectionString("PostgreSQLConnection");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-options.UseSqlServer("name=DefaultConnection"));
+    options.UseNpgsql(connectionString));
+
 
 var app = builder.Build();
 
