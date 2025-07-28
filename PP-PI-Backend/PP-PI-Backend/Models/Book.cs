@@ -1,4 +1,4 @@
-﻿namespace PP_PI_Backend.Entities
+﻿namespace PP_PI_Backend.Models
 {
     public class Book
     {
@@ -10,9 +10,6 @@
         //public Editorial Editorial {get; set;}
 
         //public ICollection<Reseña> Reseñas {get; set;} = new List<Reseña>();
+        
     }
-
-
-
-
 }

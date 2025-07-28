@@ -1,11 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PP_PI_Backend;
+using PP_PI_Backend.Data;
+using Microsoft.EntityFrameworkCore;
+
+
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 var allowedOrigins = builder.Configuration.GetValue<string>("AllowedOrigins")!.Split(",");
 
+var connectionStrings = builder.Configuration.GetConnectionString("PostgreSQLConnection"); // Setting the connection string for Postgre
+
+builder.Services.AddDbContext<LibraryDb>(options => 
+    options.UseNpgsql(connectionStrings)); // Setting the db context
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -19,15 +25,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-
-
-
-var connectionString = builder.Configuration.GetConnectionString("PostgreSQLConnection");
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
-
 
 var app = builder.Build();
 
