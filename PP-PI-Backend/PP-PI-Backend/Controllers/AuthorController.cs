@@ -44,6 +44,7 @@ namespace PP_PI_Backend.Controllers
         {
             var authorExists = await context.Authors.AnyAsync(x => x.Id == id); // Generates a flag for the author search
             if (!authorExists) { return NotFound(); } // If there's no match, then returns a NotFound 
+            author.Id = id; // Pastes the Id on the author
             context.Update(author); // Memory Operation
             await context.SaveChangesAsync(); // Persistance
             return NoContent(); // When the update has been finished correctly, the method returns a 204 No Content
