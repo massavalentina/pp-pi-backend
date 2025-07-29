@@ -49,7 +49,7 @@ namespace PP_PI_Backend.Controllers
             return NoContent(); // When the update has been finished correctly, the method returns a 204 No Content
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int}")] // Delete an author
         public async Task<ActionResult> Delete(int id)
         {
             var deletedRows = await context.Authors.Where(x=> x.Id == id).ExecuteDeleteAsync(); // Counts the amount of deleted rows
