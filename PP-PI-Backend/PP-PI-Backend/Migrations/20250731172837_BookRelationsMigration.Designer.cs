@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PP_PI_Backend.Data;
@@ -11,9 +12,11 @@ using PP_PI_Backend.Data;
 namespace PP_PI_Backend.Migrations
 {
     [DbContext(typeof(LibraryDb))]
-    partial class LibraryDbModelSnapshot : ModelSnapshot
+    [Migration("20250731172837_BookRelationsMigration")]
+    partial class BookRelationsMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,7 +67,7 @@ namespace PP_PI_Backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("Birthdate")
+                    b.Property<DateTime>("Birthdate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("FirstName")
@@ -76,6 +79,7 @@ namespace PP_PI_Backend.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Nationality")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
