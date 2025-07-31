@@ -1,4 +1,6 @@
-﻿namespace PP_PI_Backend.Entities
+﻿using PP_PI_Backend.Models;
+
+namespace PP_PI_Backend.Entities
 {
     public class Publisher
     {
@@ -9,6 +11,7 @@
         public DateTime? FoundedAt { get; set; }
         public bool IsActive { get; set; } = true;
         public DateTime? CreatedAt { get; set; }
+        public ICollection<Book> Books { get; set; } = new List<Book>(); // List of books that allows inverted navegation
 
     }
 }
