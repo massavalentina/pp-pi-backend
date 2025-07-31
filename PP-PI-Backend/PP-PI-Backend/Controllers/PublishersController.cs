@@ -36,10 +36,23 @@ namespace PP_PI_Backend.Controllers
         [HttpPost]
         public async Task<CreatedAtRouteResult> Post([FromBody] Publisher publisher)
         {
+
+            if (publisher.FoundedAt.HasValue)
+            {
+                publisher.FoundedAt = DateTime.SpecifyKind(publisher.FoundedAt.Value, DateTimeKind.Utc);
+            }
+
+            if (publisher.CreatedAt.HasValue)
+            {
+                publisher.CreatedAt = DateTime.SpecifyKind(publisher.CreatedAt.Value, DateTimeKind.Utc);
+            }
+
             context.Add(publisher);
             await context.SaveChangesAsync();
+
             return CreatedAtRoute("GetById", new { id = publisher.Id }, publisher);
         }
+
 
         [HttpPut("{id:int}")]
         public async Task<ActionResult> Put(int id, [FromBody] Publisher publisher)
