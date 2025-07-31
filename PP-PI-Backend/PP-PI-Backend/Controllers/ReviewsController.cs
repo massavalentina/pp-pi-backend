@@ -52,6 +52,8 @@ namespace PP_PI_Backend.Controllers
                 return NotFound();
             }
 
+            review.Id = id;
+
             context.Update(review);
             await context.SaveChangesAsync();
             return NoContent();
