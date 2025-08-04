@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PP_PI_Backend.Data;
+using PP_PI_Backend.DTO.Book;
 using PP_PI_Backend.Models;
+using PP_PI_Backend.DTO.Review;
 
 namespace PP_PI_Backend.Controllers
 {
@@ -16,34 +18,104 @@ namespace PP_PI_Backend.Controllers
         }
 
         [HttpGet] // Get a list of all books
-        public async Task<List<Book>> Get() { return await context.Books.ToListAsync(); }
-
-
-        [HttpGet("{id:int}")] // Get a specific book by its ID
-        public async Task<ActionResult<Book>> Get(int id)
+        public async Task<List<BookDTO>> GetAll() // Returns a list of the DTO's
         {
-            var book = await context.Books.FirstOrDefaultAsync(x => x.Id == id); // Get from the DB the book that matches the ID
-            if (book is null) { return NotFound(); } // If there's no found, it returns a 404 Not Found
-            return book; // If not, then return the book. 
+            return await context.Books // Brings the Book table
+                .Include(b => b.Author) // JOINS with Author
+                .Include(b => b.Publisher) // JOINS with Publisher
+                .Select(b => new BookDTO
+                {
+                    Id = b.Id, // Inserts into the DTO all the information of every Book
+                    Title = b.Title,
+                    AuthorName = b.Author.FirstName + " " + b.Author.LastName,
+                    PublisherName = b.Publisher.Name
+                }).ToListAsync();
         }
 
-        [HttpPost] // Insert a new book
-        public async Task<CreatedAtRouteResult> Post(Book book)
+        [HttpGet("{id:int}")] // Get an specific books by its ID
+        public async Task<ActionResult<BookWithReviewsDTO>> GetById(int id) // Returns a single instance of the DTO
         {
-            context.Add(book); // Stashes the insertion of the new register (memory operation)
-            await context.SaveChangesAsync(); // Persists the insertion in the db table
-            return CreatedAtRoute("GetAuthorById", new { id = book.Id }, book);
-            // Returns the created book with the Get method, according to its new ID
+            var book = await context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Publisher)
+                .Include(b => b.Reviews)
+                .FirstOrDefaultAsync(b => b.Id == id); // If brings the book that matches the ID
+
+            if (book == null) return NotFound();
+
+            var dto = new BookWithReviewsDTO // Creates a new DTO and inserts all the necessary informations 
+            {
+                Id = book.Id,
+                Title = book.Title,
+                AuthorName = $"{book.Author.FirstName} {book.Author.LastName}",
+                PublisherName = book.Publisher.Name,
+                Reviews = book.Reviews.Select(r => new ReviewDTO
+                {
+                    Id = r.Id,
+                    Comment = r.Comment,
+                    Rating = r.Rating
+                }).ToList()
+            };
+            return dto;
         }
 
-        [HttpPut("{id:int}")] // Modify a book
-        public async Task<ActionResult> Put(int id, [FromBody] Book book)
+        [HttpPost] // Creates a new book
+        public async Task<ActionResult<Book>> Post([FromBody] BookCreateDTO dto)
         {
-            var bookExists = await context.Books.AnyAsync(x => x.Id == id); // Generates a flag for the book search
-            if (!bookExists) { return NotFound(); } // If there's no match, then returns a NotFound 
-            context.Update(book); // Memory Operation
-            await context.SaveChangesAsync(); // Persistance
-            return NoContent(); // When the update has been finished correctly, the method returns a 204 No Content
+            // Verifies if the author exists
+            var authorExists = await context.Authors.AnyAsync(a => a.Id == dto.AuthorId);
+            if (!authorExists)
+            {
+                return BadRequest($"No se encontró el autor con ID {dto.AuthorId}.");
+            }
+
+            // Verifies if the publishers exists
+            var publisherExists = await context.Publishers.AnyAsync(p => p.Id == dto.PublisherId);
+            if (!publisherExists)
+            {
+                return BadRequest($"No se encontró la editorial con ID {dto.PublisherId}.");
+            }
+
+            // Creates the book
+            var book = new Book
+            {
+                Title = dto.Title,
+                AuthorId = dto.AuthorId,
+                PublisherId = dto.PublisherId
+            };
+
+            context.Books.Add(book);
+            await context.SaveChangesAsync();
+
+            return CreatedAtRoute("GetById", new { id = book.Id }, book);
+        }
+
+        [HttpPut("{id}")] // Modifies a book by its ID
+        public async Task<ActionResult> Put(int id, [FromBody] BookUpdateDTO dto)
+        {
+           
+            var bookInDb = await context.Books.FirstOrDefaultAsync(b => b.Id == id); // Brings the book
+            if (bookInDb == null)
+            {
+                return NotFound($"No se encontró el libro con ID {id}.");
+            }
+
+            // Verifying the relations
+            var authorExists = await context.Authors.AnyAsync(a => a.Id == dto.AuthorId);
+            var publisherExists = await context.Publishers.AnyAsync(p => p.Id == dto.PublisherId);
+
+            if (!authorExists || !publisherExists)
+            {
+                return BadRequest("El autor o la editorial especificados no existen.");
+            }
+
+            // Updates the information
+            bookInDb.Title = dto.Title;
+            bookInDb.AuthorId = dto.AuthorId;
+            bookInDb.PublisherId = dto.PublisherId;
+
+            await context.SaveChangesAsync();
+            return NoContent(); // 204
         }
 
         [HttpDelete("{id:int}")] // Delete a book
