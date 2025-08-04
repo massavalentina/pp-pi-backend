@@ -182,3 +182,4 @@ packages
 *.min.js
 PP-PI-Backend/PP-PI-Backend/PP-PI-Backend.csproj
 /PP-PI-Backend/PP-PI-Backend/appsettings.json
+PP-PI-Backend/PP-PI-Backend/appsettings.json
