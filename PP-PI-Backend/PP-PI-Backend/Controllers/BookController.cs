@@ -27,6 +27,9 @@ namespace PP_PI_Backend.Controllers
                 {
                     Id = b.Id, // Inserts into the DTO all the information of every Book
                     Title = b.Title,
+                    Description = b.Description,
+                    PublicationDate = b.PublicationDate,
+                    ImageUrl = b.ImageUrl,
                     AuthorName = b.Author.FirstName + " " + b.Author.LastName,
                     PublisherName = b.Publisher.Name
                 }).ToListAsync();
@@ -47,6 +50,9 @@ namespace PP_PI_Backend.Controllers
             {
                 Id = book.Id,
                 Title = book.Title,
+                Description = book.Description,
+                PublicationDate = book.PublicationDate,
+                ImageUrl = book.ImageUrl,
                 AuthorName = $"{book.Author.FirstName} {book.Author.LastName}",
                 PublisherName = book.Publisher.Name,
                 Reviews = book.Reviews.Select(r => new ReviewDTO
@@ -80,6 +86,9 @@ namespace PP_PI_Backend.Controllers
             var book = new Book
             {
                 Title = dto.Title,
+                Description = dto.Description,
+                PublicationDate = dto.PublicationDate,
+                ImageUrl = dto.ImageUrl,
                 AuthorId = dto.AuthorId,
                 PublisherId = dto.PublisherId
             };
@@ -111,6 +120,9 @@ namespace PP_PI_Backend.Controllers
 
             // Updates the information
             bookInDb.Title = dto.Title;
+            bookInDb.Description = dto.Description;
+            bookInDb.PublicationDate = dto.PublicationDate;
+            bookInDb.ImageUrl = dto.ImageUrl;
             bookInDb.AuthorId = dto.AuthorId;
             bookInDb.PublisherId = dto.PublisherId;
 

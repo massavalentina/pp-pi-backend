@@ -6,6 +6,10 @@ namespace PP_PI_Backend.Models
     {
         public int Id { get; set; } // Book ID
         public string Title { get; set; } // Book title
+
+        public string Description { get; set; } // Book description
+        public DateTime PublicationDate { get; set; } // Date when the book was published
+        public string ImageUrl { get; set; } // URL for the books image
         public int AuthorId {  get; set; } // Author ID
         public Author Author {get; set; } // Author object
 
