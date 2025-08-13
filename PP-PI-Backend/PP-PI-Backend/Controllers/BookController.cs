@@ -65,6 +65,24 @@ namespace PP_PI_Backend.Controllers
             return dto;
         }
 
+        [HttpGet("forreviews")]
+        public async Task<ActionResult<List<BookWithReviewsDTO>>> GetBooksForReviews()
+        {
+            var books = await context.Books
+                .Include(b => b.Author)        // Incluye la relación con autor
+                .Include(b => b.Publisher)     // Incluye la relación con editorial/publisher
+                .Select(b => new BookWithReviewsDTO
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    AuthorName = b.Author.FirstName,           // Asegurate que la propiedad se llame así
+                    PublisherName = b.Publisher.Name      // Igual acá
+                })
+                .ToListAsync();
+
+            return Ok(books);
+        }
+
         [HttpPost] // Creates a new book
         public async Task<ActionResult<Book>> Post([FromBody] BookCreateDTO dto)
         {

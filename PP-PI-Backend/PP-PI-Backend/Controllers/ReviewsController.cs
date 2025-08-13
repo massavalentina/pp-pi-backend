@@ -16,14 +16,39 @@ namespace PP_PI_Backend.Controllers
         {
             this.context = context;
         }
+        
 
-        [HttpGet] // Gets all of the reviews
-        public async Task<ActionResult<List<ReviewDTO>>> Get()
+        [HttpGet("{bookId}/reviews")]
+        public async Task<ActionResult<IEnumerable<BookForReviewDTO>>> GetReviewsForBook(int bookId)
         {
             var reviews = await context.Reviews
-                .Select(r => new ReviewDTO
+                .Where(r => r.BookId == bookId)
+                .Select(r => new BookForReviewDTO
                 {
                     Id = r.Id,
+                    BookId = r.BookId,
+                    Title = r.Book.Title,
+                    Comment = r.Comment,
+                    Rating = r.Rating
+                })
+                .ToListAsync();
+
+            return Ok(reviews);
+        }
+
+        
+
+        [HttpGet("book/{bookId}")]
+        public async Task<ActionResult<List<BookForReviewDTO>>> GetReviewsByBook(int bookId)
+        {
+            var reviews = await context.Reviews
+                .Include(r => r.Book)
+                .Where(r => r.BookId == bookId)
+                .Select(r => new BookForReviewDTO
+                {
+                    Id = r.Id,
+                    BookId = r.BookId,
+                    Title = r.Book.Title,
                     Comment = r.Comment,
                     Rating = r.Rating
                 })
@@ -33,11 +58,7 @@ namespace PP_PI_Backend.Controllers
         }
 
 
-        //[HttpGet]
-        //public async Task<List<Review>> Get()
-        //{
-        //    return await context.Reviews.ToListAsync();
-        //}
+
 
         [HttpGet("{id:int}", Name = "GetReviewForId")] // Get a review by its ID
         public async Task<ActionResult<Review>> Get(int id)
@@ -67,14 +88,7 @@ namespace PP_PI_Backend.Controllers
         }
 
 
-        //[HttpPost]
-        //public async Task<CreatedAtRouteResult> Post([FromBody] Review review)
-        //{
-        //    context.Add(review);
-        //    await context.SaveChangesAsync();
-
-        //    return CreatedAtRoute("GetReviewForId", new { id = review.Id }, review);
-        //}
+        
 
         [HttpPut("{id:int}")]
         public async Task<ActionResult> Put(int id,[FromBody] Review review)
